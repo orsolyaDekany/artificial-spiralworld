@@ -1,23 +1,26 @@
-import './style.css'
-import javascriptLogo from './javascript.svg'
-import { setupCounter } from './counter.js'
+import "./style.css";
+import runSpiralWorldScript from "./js/script";
 
-document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`
+const loadFileAsText = () => {
+  const preview = document.getElementById("fileOutput");
+  const uploadedFile = document.getElementById("uploadedFile").files[0];
+  const textFile = /text.*/;
 
-setupCounter(document.querySelector('#counter'))
+  const fileReader = new FileReader();
+
+  if (uploadedFile.type.match(textFile)) {
+    fileReader.onload = function (event) {
+      const result = event.target.result.trim();
+      preview.innerHTML = runSpiralWorldScript(result);
+    };
+    fileReader.readAsText(uploadedFile);
+  } else {
+    alert("Wrong file type, please upload a text file");
+  }
+};
+
+window.onload = () => {
+  document.getElementById("uploadedFile").onchange = (event) => {
+    loadFileAsText(event);
+  };
+};
